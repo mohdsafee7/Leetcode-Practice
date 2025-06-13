@@ -1,0 +1,94 @@
+# LeetCode 2616: Minimize the Maximum Difference of Pairs
+Problem Link: https://leetcode.com/problems/minimize-the-maximum-difference-of-pairs/description/
+
+## Problem Statement
+
+Given an integer array `nums` and an integer `p`, form `p` pairs (each index used at most once) such that the **maximum difference** among all pairs is minimized. Return this minimum possible value.
+
+---
+
+## Intuition
+
+The core challenge is to select `p` pairs from the array so that the largest difference among these pairs is as small as possible. Since the answer must be between 0 and the largest difference in the array, we can use **binary search on the answer**. For each candidate value, we check if it's possible to form at least `p` pairs with differences no greater than this value. This approach efficiently narrows down the smallest feasible answer.
+
+---
+
+## Approach
+
+1. **Sort the Array**  
+   Sorting ensures that adjacent elements are as close as possible, which helps in forming pairs with minimal differences.
+
+2. **Binary Search on the Answer**  
+   - Set the search range from 0 to the largest difference in the sorted array.
+   - For each candidate maximum difference (`mid`), check if it's possible to form at least `p` pairs with differences ≤ `mid`.
+
+3. **Greedy Pairing Check**  
+   - Iterate through the array.
+   - Pair up adjacent elements if their difference is ≤ `mid`.
+   - Skip both elements when a pair is formed to ensure each index is used at most once.
+   - Count the number of pairs formed.
+
+4. **Narrow the Search**  
+   - If you can form at least `p` pairs, try a smaller `mid` (move left).
+   - Otherwise, try a larger `mid` (move right).
+   - The smallest `mid` for which you can form at least `p` pairs is the answer.
+
+---
+
+## Complexity
+
+- **Time Complexity:**  
+  - Sorting: $$O(n \log n)$$  
+  - Binary search: $$O(\log D)$$, where $$D$$ is the range of possible differences.  
+  - Greedy check per search step: $$O(n)$$  
+  - **Total:** $$O(n \log n + n \log D)$$
+
+- **Space Complexity:**  
+  - The algorithm uses only a constant amount of extra space (apart from the input array and sorting, which is in-place).  
+  - **Total:** $$O(1)$$ extra space
+
+---
+
+## Implementation
+
+```cpp
+class Solution {
+public:
+    // Helper function to count possible pairs with max difference & nums, int n, int mid) {
+        int i = 1;
+        int posbl_pairs = 0;
+        while (i & nums, int p) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int low = 0;
+        int high = nums[n-1] - nums[0];
+
+        while (low = p) {
+                high = mid - 1; // Try to minimize further
+            } else {
+                low = mid + 1;  // Need to allow larger differences
+            }
+        }
+        return low; // 'low' is the minimum max difference that works
+    }
+};
+```
+
+---
+
+## Example Walkthrough
+
+Suppose `nums = [3, 5, 2,= 2`.
+
+- **After sorting:** `[1, 2, 3,ary search range:** `low = 0`, `high = 6` (since 7 - 1 = 6)
+- Try `mid = 3`: Can form 2 pairs (`(1,2)`, `(3,5)`) → Try smaller.
+- Try `mid = 1`: Can form only 1 pair → Try larger.
+- Try `mid = 2`: Can form 2 pairs → This is the answer.
+
+---
+
+## Conclusion
+
+This problem is a classic example of **binary search on the answer** combined with a greedy pairing strategy. Sorting the array and pairing adjacent elements ensures the smallest possible differences, and binary search efficiently narrows down the minimal maximum difference.
+
+---
